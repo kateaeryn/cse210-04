@@ -14,9 +14,11 @@ class Director:
         Args:
             keyboard_service (KeyboardService): An instance of KeyboardService.
             video_service (VideoService): An instance of VideoService.
+            score(int): a local integer to store the score
         """
         self._keyboard_service = keyboard_service
         self._video_service = video_service
+        self._score = 0
 
     def start_game(self, cast):
         """Starts the game using the given cast. Runs the main game loop.
@@ -40,7 +42,7 @@ class Director:
         robot = cast.get_first_actor("robots")
         velocity = self._keyboard_service.get_direction()
         robot.set_velocity(velocity)
-
+       
         
     def _do_updates(self, cast):
         """Updates the robot's position and resolves any collisions with artifacts.
@@ -50,33 +52,23 @@ class Director:
         """
         banner = cast.get_first_actor("banners")
         robot = cast.get_first_actor("robots")
-        rocks = cast.get_actors("rocks")
         gems = cast.get_actors("gems")
+        rocks = cast.get_actors("rocks")
+        artifacts = gems + rocks
         
-
-        banner.set_text("")
         max_x = self._video_service.get_width()
         max_y = self._video_service.get_height()
         robot.move_next(max_x, max_y)
+        
+        for artifact in artifacts:
 
-        for gem in gems:
-            if robot.get_position().equals(gem.get_position()):
-                ## change message adding to point score adding
-                ## may need a class to track and post the scores? - use the banner for display
-                
-                score = gem.get_score()
-                score += 1
-                banner.set_text(score)
-
-        for rock in rocks:
-            if robot.get_position().equals(rock.get_position()):
-                ## same here
-               
-                ## also need to remove rock or gem when touched that goes here
-                score = rock.get_score()
-                score -= 1
-                banner.set_text(score)
-
+            if robot.get_position().equals(artifact.get_position()):
+                self._score = self._score + artifact.calculate_score()
+                cast.remove_actor("artifacts", artifact)
+            artifact.move_next(max_x, max_y)   
+            display = str(self._score)
+            banner.set_text("Score: " + display)
+        
 
     def _do_outputs(self, cast):
         """Draws the actors on the screen.

@@ -57,6 +57,7 @@ class Point:
         Returns:
             integer: The vertical distance.
         """
+        
         return self._y
 
     def scale(self, factor):
@@ -70,3 +71,6 @@ class Point:
             Point: A new Point that is scaled.
         """
         return Point(self._x * factor, self._y * factor)
+
+    
+  

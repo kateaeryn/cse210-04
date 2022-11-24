@@ -2,8 +2,7 @@ import os
 import random
 
 from game.casting.actor import Actor
-from game.casting.rock import Rock
-from game.casting.gem import Gem
+from game.casting.artifact import Artifact
 from game.casting.cast import Cast
 
 from game.directing.director import Director
@@ -18,15 +17,14 @@ from game.shared.point import Point
 FRAME_RATE = 12
 MAX_X = 900
 MAX_Y = 600
-CELL_SIZE = 15
-FONT_SIZE = 20
+CELL_SIZE = 18
+FONT_SIZE = 18
 COLS = 60
 ROWS = 40
 CAPTION = "Greed"
-##DATA_PATH = os.path.dirname(os.path.abspath(__file__)) + "/data/messages.txt"
 WHITE = Color(255, 255, 255)
-DEFAULT_rockS = 40
-
+DEFAULT_OBJECTS = 20
+SPEED = 4
 
 def main():
 
@@ -43,7 +41,7 @@ def main():
 
     # create the robot
     x = int(MAX_X / 2)
-    y = int(MAX_Y / 2)
+    y = int(555)
     position = Point(x, y)
 
     robot = Actor()
@@ -53,42 +51,40 @@ def main():
     robot.set_position(position)
     cast.add_actor("robots", robot)
 
-    # create the rocks
-    ##with open(DATA_PATH) as file:
-      ##  data = file.read()
-        ##messages = data.splitlines()
+    # create the objects
 
-    for n in range(DEFAULT_rockS):
-    
-      ##  text = chr(random.randint(33, 126))
-       ## message = messages[n]
-        score = 0
-        x = random.randint(1, COLS - 1)
+    for n in range(DEFAULT_OBJECTS):
         y = random.randint(1, ROWS - 1)
-        position = Point(x, y)
-        position = position.scale(CELL_SIZE)
+        x = random.randint(1, COLS - 1)
+        w = random.randint(1, COLS - 1)
+        z = random.randint(1, ROWS - 1)
+        speed = random.randint(1, 4)
+        
+        positionR = Point(x, y)
+        positionG = Point(w, z)
+        positionR = positionR.scale(CELL_SIZE)
+        positionG = positionG.scale(CELL_SIZE)
 
         r = random.randint(0, 255)
         g = random.randint(0, 255)
         b = random.randint(0, 255)
         color = Color(r, g, b)
 
-        rock = Rock()
+        rock = Artifact()
         rock.set_text("O")
         rock.set_font_size(FONT_SIZE)
         rock.set_color(color)
-        rock.set_position(position)
-        rock.set_score(score)
+        rock.set_position(positionR)
+        rock.set_velocity(Point(0,speed))
         cast.add_actor("rocks", rock)
 
-        gem = Gem()
-        gem.set_text("X")
+        gem = Artifact()
+        gem.set_text("*")
         gem.set_font_size(FONT_SIZE)
         gem.set_color(color)
-        gem.set_position(position)
-        gem.set_score(score)
+        gem.set_position(positionG)
+        gem.set_velocity(Point(0,speed))
         cast.add_actor("gems", gem)
-
 
 
     # start the game

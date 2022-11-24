@@ -1,7 +1,6 @@
 from game.shared.color import Color
 from game.shared.point import Point
 
-
 class Actor:
     """A visible, moveable thing that participates in the game. 
     
@@ -116,3 +115,7 @@ class Actor:
             velocity (Point): The given velocity.
         """  
         self._velocity = velocity
+
+   
+
+    
